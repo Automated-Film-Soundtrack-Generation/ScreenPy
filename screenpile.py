@@ -162,12 +162,15 @@ def master_segmentize(segs):
 			if head_dict['terior'] is not None:
 				if len(master_seg) > 0:
 					master_segs.append(master_seg)
-				master_seg = [seg(head_type, head_dict, fleshy_text).__dict__]
+				# master_seg = [seg(head_type, head_dict, fleshy_text).__dict__]
+				master_seg = [seg(head_type, head_dict, fleshy_text)._asdict()]
 			else:
-				master_seg.append(seg(head_type, head_dict, fleshy_text).__dict__)
+				# master_seg.append(seg(head_type, head_dict, fleshy_text).__dict__)
+				master_seg.append(seg(head_type, head_dict, fleshy_text)._asdict())
 
 		elif head_type in {'speaker/title', 'transition'}:
-			master_seg.append(seg(head_type, {head_type: head_text}, fleshy_text).__dict__)
+			# master_seg.append(seg(head_type, {head_type: head_text}, fleshy_text).__dict__)
+			master_seg.append(seg(head_type, {head_type: head_text}, fleshy_text)._asdict())
 
 	if len(master_seg) > 0:
 		master_segs.append(master_seg)
@@ -299,7 +302,9 @@ if __name__ == '__main__':
 	# 	play = fn.read()
 
 	# screenplay = 'indianajonesandtheraidersofthelostark.txt'
-	screenplay = 'imsdb_raw_nov_2015/Western/truegrit.txt'
+	# screenplay = '../../MovieNet/310toYuma.txt'
+	screenplay = '../../MovieNet/common/scripts/tt2582846.script'
+	# screenplay = 'imsdb_raw_nov_2015/Western/truegrit.txt'
 	with open(screenplay, 'r') as fn:
 		play = fn.read()
 
@@ -309,14 +314,17 @@ if __name__ == '__main__':
 	line_tups = assemble_lines(text_lines)
 	segs = segmentize(line_tups)
 	masta = master_segmentize(segs)
+	print(masta)
 
 	# with open('test.json', 'w') as fp:
 	# 	json.dump(masta, fp, indent=4)
 
 	# pickle.dump(masta, open('ij.pkl', 'wb'))
 
-	# with open('indianajonesandtheraidersofthelostark.json', 'w') as fp:
-	with open('truegrit.json', 'w') as fp:
+	# with open('indianajonesandtheraidersofthelostark2.json', 'w') as fp:
+	# with open('310toyumaano.json', 'w') as fp:
+	with open('FIOS.json', 'w') as fp:
+	# with open('truegrit.json', 'w') as fp:
 		json.dump(masta, fp, indent=4)
 
 

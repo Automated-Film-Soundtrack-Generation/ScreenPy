@@ -11,10 +11,12 @@ def Log(message):
 
 
 # if 'sense2vec' not in sys.modules:
-import sense2vec
+from sense2vec import Sense2Vec
+# import sense2vec
 print('loading sense2vec')
 
-s2v_model = sense2vec.load()
+# s2v_model = sense2vec.load()
+s2v_model = Sense2Vec().from_disk("./s2v_old")
 print('done loading')
 
 
@@ -27,7 +29,17 @@ def loadSpacy():
 
 def sense2vec_sim(token1, token2):
 	try:
-		return s2v_model.data.similarity(s2v_model[token1][1], s2v_model[token2][1])
+		# print(token1, token2)
+		# print(s2v_model[token1], s2v_model[token2], sep = '\n')
+		if(s2v_model[token1] is None or s2v_model[token2] is None):
+			return 0
+		# print('byee')
+		x = s2v_model.similarity(token1, token2)
+		# print('Hi', x)
+		return x
+		# print('Hello', s2v_model[token1][1])
+		# return s2v_model.data.similarity(s2v_model[token1][1], s2v_model[token2][1])
+		# return s2v_model.similarity(s2v_model[token1][1], s2v_model[token2][1])
 	except ValueError:
 		return 0
 	except KeyError:
@@ -47,10 +59,12 @@ def check_hardcode(s):
 		enumerated_time_word.parseString(s)
 		return True
 	except pp.ParseException:
+		# print('Bruh')
 		try:
 			stop_words.parseString(s)
 			x = min(sense2vec_sim(s + '|NOUN', 'day|NOUN'), sense2vec_sim(s + '|NOUN', 'time|NOUN'))
 		except pp.ParseException:
+			print('Bruh2')
 			Log('stop word cannot be used for time expression')
 			return 0
 	return x
